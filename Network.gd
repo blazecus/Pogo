@@ -1,7 +1,7 @@
 extends Node
 
 #const DEFAULT_IP = '127.0.0.1'
-const DEFAULT_IP = '174.21.11.251'
+const DEFAULT_IP = '192.168.0.2'
 const DEFAULT_PORT = 31400
 const MAX_PLAYERS = 4
 
