@@ -10,9 +10,21 @@ func _ready():
 	add_child(new_player)
 	var info = Network.self_data
 	new_player.init(info.name, info.position, false)
+	
 
 func _on_player_disconnected(id):
 	get_node(str(id)).queue_free()
 
 func _on_server_disconnected():
 	get_tree().change_scene('res://interface/Menu.tscn')
+
+func read_map(map):
+	var file = File.new()
+	file.open("res://levels/" + map, File.READ)
+	var content = file.get_as_text().split("\n")
+	file.close()
+	var boxes = []
+	for i in range(0, len(content), 2):
+		var line1 = content[i]
+		var line2 = content[i + 1]
+		
