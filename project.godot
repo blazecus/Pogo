@@ -16,12 +16,13 @@ _global_script_class_icons={
 [application]
 
 config/name="Pogo"
-run/main_scene="res://MapMaker.tscn"
+run/main_scene="res://main_menu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-Network="*res://Network.gd"
+network="*res://network.gd"
+gamestate="*res://gamestate.gd"
 
 [input]
 

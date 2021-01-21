@@ -11,13 +11,14 @@ var last_speed = 0
 var landfall = 0
 var friction = false
 
-puppet var slave_position = Vector2()
-puppet var slave_rotation = 0
+slave var slave_position = Vector2()
+slave var slave_rotation = 0
 
 func _ready():
 	pass # Replace with function body
 
 func _physics_process(delta):
+	$Camera2D.current = true
 	motion.y += GRAVITY + fastfall
 
 	if friction:
@@ -38,10 +39,11 @@ func _physics_process(delta):
 					rotation -= ROTATION_SPEED * delta
 				elif Input.is_action_pressed("ui_down"):
 					fastfall = 30
-			rset_unreliable('slave_position', position)
-			rset('slave_rotation', rotation)
+			
 			last_speed = sqrt(motion.x*motion.x + motion.y*motion.y)
 			motion = move_and_slide(motion)
+			rset('slave_position', position)
+			rset('slave_rotation', rotation)
 		else:
 			last_speed = sqrt(motion.x*motion.x + motion.y*motion.y)
 			motion = move_and_slide(motion)
@@ -64,8 +66,9 @@ func _physics_process(delta):
 		if jump <= 0:
 			motion = Vector2(0, -400 - last_speed * .5).rotated(rotation)
 
-	if get_tree().is_network_server():
-		Network.update_position(int(name), position)
 		
 func init(nickname, start_position, is_slave):
 	global_position = start_position
+	
+func set_dominant_color(color):
+	$animation.modulate = color
