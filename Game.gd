@@ -68,7 +68,7 @@ remote func spawn_players(pinfo, spawn_index):
 	var pclass = load(pinfo.actor_path)
 	var nactor = pclass.instance()
 	# Setup player customization (well, the color)
-	#nactor.set_dominant_color(pinfo.char_color)
+	nactor.set_dominant_color(pinfo.char_color)
 	# And the actor position
 	nactor.position = $SpawnPoints.get_node(str(spawn_index)).position
 	# If this actor does not belong to the server, change the node name and network master accordingly

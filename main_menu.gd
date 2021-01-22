@@ -11,6 +11,16 @@ func _ready():
 	network.connect("server_created", self, "_on_ready_to_play")
 	network.connect("join_success", self, "_on_ready_to_play")
 	network.connect("join_fail", self, "_on_join_fail")
+	
+	var dir = Directory.new()
+	dir.open("res://levels/")
+	dir.list_dir_begin()
+	while true:
+		var file = dir.get_next()
+		if file =="":
+			break
+		elif not file.begins_with("."):
+			$MapMaker/ItemList.add_item(file)
 
 
 func set_player_info():

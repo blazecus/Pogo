@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const GRAVITY = 20
+const GRAVITY = 40
 const ROTATION_SPEED = 7
 const JUMP_HEIGHT = -550
 
@@ -18,7 +18,7 @@ func _ready():
 	pass # Replace with function body
 
 func _physics_process(delta):
-	$Camera2D.current = true
+
 	motion.y += GRAVITY + fastfall
 
 	if friction:
@@ -32,13 +32,14 @@ func _physics_process(delta):
 		$animation.play("air")
 		fastfall = 0
 		if is_network_master():
+			$Camera2D.current = true
 			if(jump < -.1):
 				if Input.is_action_pressed("ui_right"):
 					rotation += ROTATION_SPEED * delta
 				elif Input.is_action_pressed("ui_left"):
 					rotation -= ROTATION_SPEED * delta
 				elif Input.is_action_pressed("ui_down"):
-					fastfall = 30
+					fastfall = 45
 			
 			last_speed = sqrt(motion.x*motion.x + motion.y*motion.y)
 			motion = move_and_slide(motion)
@@ -64,7 +65,7 @@ func _physics_process(delta):
 		$animation.play("jump")
 		jump -= delta
 		if jump <= 0:
-			motion = Vector2(0, -400 - last_speed * .5).rotated(rotation)
+			motion = Vector2(0, -600 - last_speed * .8).rotated(rotation)
 
 		
 func init(nickname, start_position, is_slave):
