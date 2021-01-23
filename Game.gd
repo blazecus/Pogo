@@ -100,7 +100,7 @@ remote func despawn_player(pinfo):
 
 func read_map():
 	$TileMap.clear()
-	var content = network.server_info.map_data.split("\n")
+	var content = network.server_info.map_content.split("\n")
 
 	content.remove(len(content) - 1)
 	

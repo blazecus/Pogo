@@ -45,7 +45,7 @@ func _on_btCreate_pressed():
 	file.open("res://levels/" + network.server_info.current_map, File.READ)
 	var content = file.get_as_text()
 	file.close()
-	network.server_info.map_data = content
+	network.server_info.map_content = content
 	# And create the server, using the function previously added into the code
 	network.create_server()
 
