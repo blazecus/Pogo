@@ -18,7 +18,7 @@ func _ready():
 	else:
 		rpc_id(1, "spawn_players", gamestate.player_info, -1)
 		#HUDrpc_id(1, "sync_bots", -1)
-
+	read_map()
 
 func _on_player_list_changed():
 	print("Got the player_list_changed event")
@@ -98,37 +98,18 @@ remote func despawn_player(pinfo):
 	# Mark the node for deletion
 	player_node.queue_free()
 
+func read_map():
+	$TileMap.clear()
+	var file = File.new()
 
-remote func sync_bots(bot_count):
-	if (get_tree().is_network_server()):
-		# Calculate the target amount of spawned bots
-		bot_count = network.server_info.max_players - network.players.size()
-		# Relay this to the connected players
-		rpc("sync_bots", bot_count)
+	file.open("res://levels/" + network.server_info.current_map, File.READ)
+	var content = file.get_as_text().split("\n")
+	file.close()
+	content.remove(len(content) - 1)
 	
-	if (gamestate.spawned_bots > bot_count):
-		# We have more bots than the target count - must remove some
-		while (gamestate.spawned_bots > bot_count):
-			# Locate the bot's node
-			var bnode = get_node(gamestate.bot_info[gamestate.spawned_bots].name)
-			if (!bnode):
-				print("Must remove bots from game but cannot find it's node")
-				return
-			# Mark it for removal
-			bnode.queue_free()
-			# And update the spawned bot count
-			gamestate.spawned_bots -= 1
-	
-	elif (gamestate.spawned_bots < bot_count):
-		# We have less bots than the target count - must add some
-		# Since every single bot uses the exact same scene path we can cahce it's loaded scene here
-		# otherwise, we would have to move the following code into the while loop and change the dictionary
-		# key ID to point into the correct bot info. In this case we are pointing to the 1
-		var bot_class = load(gamestate.bot_info[1].actor_path)
-		
-		while (gamestate.spawned_bots < bot_count):
-			var nbot = bot_class.instance()
-			nbot.set_name(gamestate.bot_info[gamestate.spawned_bots+1].name)
-			add_child(nbot)
-			gamestate.spawned_bots += 1
+	for i in content:
+		var comma = i.find(",")
+		$TileMap.set_cell(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)), 0)
 
+	
+	

@@ -38,6 +38,8 @@ func _on_btCreate_pressed():
 		network.server_info.name = $PanelHost/txtServerName.text
 	network.server_info.max_players = int($PanelHost/txtMaxPlayers.value)
 	network.server_info.used_port = int($PanelHost/txtServerPort.text)
+	if len($MapMaker/ItemList.get_selected_items()) > 0:
+		network.server_info.current_map = $MapMaker/ItemList.get_item_text($MapMaker/ItemList.get_selected_items()[0])
 	
 	# And create the server, using the function previously added into the code
 	network.create_server()
@@ -59,3 +61,7 @@ func _on_ready_to_play():
 func _on_join_fail():
 	print("Failed to join server")
 
+
+
+func _on_mmEnter_pressed():
+	get_tree().change_scene("res://MapMaker.tscn")

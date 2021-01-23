@@ -7,10 +7,13 @@
 script = ExtResource( 1 )
 
 [node name="PanelHost" type="Panel" parent="."]
-margin_left = 10.0
-margin_top = 150.0
-margin_right = 301.0
-margin_bottom = 310.0
+margin_left = 8.0
+margin_top = 152.0
+margin_right = 296.0
+margin_bottom = 392.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="PanelHost"]
 margin_left = 100.0
@@ -66,17 +69,23 @@ __meta__ = {
 }
 
 [node name="btCreate" type="Button" parent="PanelHost"]
-margin_left = 230.0
-margin_top = 130.0
-margin_right = 283.0
-margin_bottom = 150.0
+margin_left = 221.0
+margin_top = 201.0
+margin_right = 274.0
+margin_bottom = 221.0
 text = "Create"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PanelJoin" type="Panel" parent="."]
-margin_left = 10.0
-margin_top = 316.0
-margin_right = 301.0
-margin_bottom = 426.0
+margin_left = 8.0
+margin_top = 400.0
+margin_right = 296.0
+margin_bottom = 512.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="PanelJoin"]
 margin_left = 110.0
@@ -121,10 +130,10 @@ margin_bottom = 100.0
 text = "Join"
 
 [node name="PanelPlayer" type="Panel" parent="."]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 300.0
-margin_bottom = 146.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 296.0
+margin_bottom = 144.0
 
 [node name="Label" type="Label" parent="PanelPlayer"]
 margin_left = 10.0
@@ -165,38 +174,42 @@ margin_bottom = 126.0
 text = "Default"
 
 [node name="MapMaker" type="Panel" parent="."]
-margin_left = 309.0
-margin_top = 11.0
-margin_right = 600.0
-margin_bottom = 147.0
+margin_left = 304.0
+margin_top = 8.0
+margin_right = 408.0
+margin_bottom = 72.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="MapMaker"]
-margin_left = 19.0
-margin_top = 7.0
-margin_right = 272.0
-margin_bottom = 21.0
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 86.0
+margin_bottom = 22.0
 text = "Map Maker"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="MapMaker"]
-margin_left = 228.0
-margin_top = 7.0
-margin_right = 273.0
-margin_bottom = 27.0
+[node name="mmEnter" type="Button" parent="MapMaker"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 77.0
+margin_bottom = 52.0
 text = "Enter"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ItemList" type="ItemList" parent="MapMaker"]
-margin_left = 19.0
-margin_top = 35.0
-margin_right = 205.0
-margin_bottom = 120.0
+margin_left = -277.0
+margin_top = 279.0
+margin_right = -91.0
+margin_bottom = 364.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="pressed" from="PanelHost/btCreate" to="." method="_on_btCreate_pressed"]
 [connection signal="pressed" from="PanelJoin/btJoin" to="." method="_on_btJoin_pressed"]
+[connection signal="pressed" from="MapMaker/mmEnter" to="." method="_on_mmEnter_pressed"]

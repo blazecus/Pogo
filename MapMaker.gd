@@ -42,4 +42,4 @@ func _on_save_pressed():
 		file.close()
 		
 func _on_back_pressed():
-	get_tree().change_scene('res://interface/Menu.tscn')
+	get_tree().change_scene('res://main_menu.tscn')

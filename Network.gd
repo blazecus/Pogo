@@ -9,7 +9,8 @@ signal player_removed(pinfo)                   # A player has been removed from 
 var server_info = {
 	name = "Server",      # Holds the name of the server
 	max_players = 0,      # Maximum allowed connections
-	used_port = 0         # Listening port
+	used_port = 0,        # Listening port
+	current_map = "level1.txt" #current map
 }
 
 
