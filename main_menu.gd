@@ -41,6 +41,11 @@ func _on_btCreate_pressed():
 	if len($MapMaker/ItemList.get_selected_items()) > 0:
 		network.server_info.current_map = $MapMaker/ItemList.get_item_text($MapMaker/ItemList.get_selected_items()[0])
 	
+	var file = File.new()
+	file.open("res://levels/" + network.server_info.current_map, File.READ)
+	var content = file.get_as_text()
+	file.close()
+	network.server_info.map_data = content
 	# And create the server, using the function previously added into the code
 	network.create_server()
 
@@ -52,6 +57,7 @@ func _on_btJoin_pressed():
 	var port = int($PanelJoin/txtJoinPort.text)
 	var ip = $PanelJoin/txtJoinIP.text
 	network.join_server(ip, port)
+	
 
 
 func _on_ready_to_play():

@@ -10,7 +10,8 @@ var server_info = {
 	name = "Server",      # Holds the name of the server
 	max_players = 0,      # Maximum allowed connections
 	used_port = 0,        # Listening port
-	current_map = "level1.txt" #current map
+	current_map = "level1.txt", #current map
+	map_content = ""
 }
 
 
@@ -51,6 +52,12 @@ func join_server(ip, port):
 		return
 		
 	get_tree().set_network_peer(net)
+	
+	var file = File.new()
+	
+	file.open("res://levels/" + server_info.current_map, file.WRITE)
+	file.store_string(server_info.map_content)
+	file.close()
 
 
 ### Event handlers

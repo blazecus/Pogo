@@ -100,11 +100,8 @@ remote func despawn_player(pinfo):
 
 func read_map():
 	$TileMap.clear()
-	var file = File.new()
+	var content = network.server_info.map_data.split("\n")
 
-	file.open("res://levels/" + network.server_info.current_map, File.READ)
-	var content = file.get_as_text().split("\n")
-	file.close()
 	content.remove(len(content) - 1)
 	
 	for i in content:
