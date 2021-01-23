@@ -53,11 +53,7 @@ func join_server(ip, port):
 		
 	get_tree().set_network_peer(net)
 	
-	var file = File.new()
 	
-	file.open("res://levels/" + server_info.current_map, file.WRITE)
-	file.store_string(server_info.map_content)
-	file.close()
 
 
 ### Event handlers
