@@ -1,12 +1,15 @@
 extends Node2D
 
-
+var done = true
 func _ready():
+
+
 	# Connect event handler to the player_list_changed signal
 	network.connect("player_list_changed", self, "_on_player_list_changed")
 	# If we are in the server, connect to the event that will deal with player despawning
 	if (get_tree().is_network_server()):
 		network.connect("player_removed", self, "_on_player_removed")
+
 	
 	# Update the lblLocalPlayer label widget to display the local player name
 	$HUD/PanelPlayerList/lblLocalPlayer.text = gamestate.player_info.name
@@ -14,13 +17,19 @@ func _ready():
 	# Spawn the players
 	if (get_tree().is_network_server()):
 		spawn_players(gamestate.player_info, 1)
+		read_map()
 		#sync_bots(-1)    # The amount doesn't matter because it will be calculated in the function body
 	else:
 		rpc_id(1, "spawn_players", gamestate.player_info, -1)
+		rpc_id(1, "read_map")
+
+
 		#HUDrpc_id(1, "sync_bots", -1)
-	read_map()
+	
+
 
 func _on_player_list_changed():
+
 	print("Got the player_list_changed event")
 	
 	# First remove all children from the boxList widget
@@ -33,6 +42,9 @@ func _on_player_list_changed():
 			var nlabel = Label.new()
 			nlabel.text = network.players[p].name
 			$HUD/PanelPlayerList/boxList.add_child(nlabel)
+	rpc_id(1, "read_map")
+	
+
 
 
 func _on_player_removed(pinfo):
@@ -78,7 +90,22 @@ remote func spawn_players(pinfo, spawn_index):
 	# Finally add the actor into the world
 	add_child(nactor)
 
+remote func read_map(old_content = ""):
+	if (get_tree().is_network_server()):
+		old_content = network.server_info.map_content
+		for id in network.players:
+			if id != 1:
+				rpc_id(id, "read_map", old_content)
+				
+	$TileMap.clear()	
+	var content = old_content.split("\n")
+	content.remove(len(content) - 1)
+		
+	for i in content:
+		var comma = i.find(",")
+		$TileMap.set_cell(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)), 0)
 
+	
 remote func despawn_player(pinfo):
 	if (get_tree().is_network_server()):
 		for id in network.players:
@@ -92,21 +119,11 @@ remote func despawn_player(pinfo):
 	# Try to locate the player actor
 	var player_node = get_node(str(pinfo.net_id))
 	if (!player_node):
-		print("Cannoot remove invalid node from tree")
+		print("Cannot remove invalid node from tree")
 		return
 	
 	# Mark the node for deletion
 	player_node.queue_free()
 
-func read_map():
-	$TileMap.clear()
-	var content = network.server_info.map_content.split("\n")
 
-	content.remove(len(content) - 1)
-	
-	for i in content:
-		var comma = i.find(",")
-		$TileMap.set_cell(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)), 0)
-
-	
 	

@@ -11,7 +11,7 @@ var server_info = {
 	max_players = 0,      # Maximum allowed connections
 	used_port = 0,        # Listening port
 	current_map = "level1.txt", #current map
-	map_content = ""
+	map_content = "" #map content
 }
 
 
@@ -52,7 +52,7 @@ func join_server(ip, port):
 		return
 		
 	get_tree().set_network_peer(net)
-	
+
 	
 
 
