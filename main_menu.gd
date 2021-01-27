@@ -58,11 +58,7 @@ func _on_btJoin_pressed():
 	var ip = $PanelJoin/txtJoinIP.text
 	network.join_server(ip, port)
 	
-	var file = File.new()
 	
-	file.open("res://levels/" + network.server_info.current_map, file.WRITE)
-	file.store_string(network.server_info.map_content)
-	file.close()
 
 
 func _on_ready_to_play():

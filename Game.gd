@@ -90,20 +90,35 @@ remote func spawn_players(pinfo, spawn_index):
 	# Finally add the actor into the world
 	add_child(nactor)
 
-remote func read_map(old_content = ""):
+remote func read_map(old_content = "", map = "level1.txt"):
 	if (get_tree().is_network_server()):
 		old_content = network.server_info.map_content
+		map = network.server_info.current_map
 		for id in network.players:
 			if id != 1:
-				rpc_id(id, "read_map", old_content)
+				rpc_id(id, "read_map", old_content, map)
 				
+				
+				
+	var file = File.new()
+	if file.file_exists("res://levels/" + map):
+		var dir = Directory.new()
+		dir.remove("res://levels/" + map)
+
+	file.open("res://levels/" + map, file.WRITE)
+	file.store_string(old_content)
+	file.close()
+	
 	$TileMap.clear()	
 	var content = old_content.split("\n")
 	content.remove(len(content) - 1)
 		
 	for i in content:
 		var comma = i.find(",")
-		$TileMap.set_cell(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)), 0)
+		#$TileMap.set_cell(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)), 0)
+		var pos = Vector2(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)))
+		$TileMap.set_cellv(pos, 1)
+		$TileMap.update_bitmask_area(pos)
 
 	
 remote func despawn_player(pinfo):

@@ -19,7 +19,9 @@ func _process(delta):
 	
 	mouse_pos = get_global_mouse_position()# - Vector2(64,64)
 	if(pressed):
-		$TileMap.set_cell(floor(mouse_pos.x/64), floor(mouse_pos.y/64), press)
+		var pos = Vector2(round(mouse_pos.x/32), round(mouse_pos.y/32))
+		$TileMap.set_cellv(pos, press)
+		$TileMap.update_bitmask_area(pos)
 
 
 
@@ -27,7 +29,11 @@ func _input(event):
 	if event is InputEventMouseButton:
 		pressed = event.is_pressed()
 		#determines if should add or delete tile - left click should be 0 (add tile), right click -1
-		press = int(event.button_index == BUTTON_LEFT) - 1
+		if event.button_index == BUTTON_LEFT:
+			press = 1
+		else:
+			press = -1
+		#press = int(event.button_index == BUTTON_LEFT) - 1
 
 
 func _on_save_pressed():

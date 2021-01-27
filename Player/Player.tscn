@@ -61,10 +61,17 @@ current = true
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.1, 0.1 )
-motion_mirroring = Vector2( 1600, 1600 )
+motion_scale = Vector2( 0.2, 0.2 )
+motion_mirroring = Vector2( 6400, 6400 )
 
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
-position = Vector2( 800, 800 )
-scale = Vector2( 25, 25 )
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+modulate = Color( 1, 1, 1, 0.247059 )
+margin_top = 5.0
+margin_right = 6400.0
+margin_bottom = 6405.0
 texture = ExtResource( 3 )
+expand = true
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
