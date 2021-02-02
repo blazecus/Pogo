@@ -90,7 +90,7 @@ remote func spawn_players(pinfo, spawn_index):
 	# Finally add the actor into the world
 	add_child(nactor)
 
-remote func read_map(old_content = "", map = "level1.txt"):
+remotesync func read_map(old_content = "", map = "level1.txt"):
 	if (get_tree().is_network_server()):
 		old_content = network.server_info.map_content
 		map = network.server_info.current_map
@@ -140,5 +140,20 @@ remote func despawn_player(pinfo):
 	# Mark the node for deletion
 	player_node.queue_free()
 
-
+#func ghost_action(pos, rot, frame, scale):
+#	rpc("ghost_spawn", pos, rot, frame, scale)
 	
+
+
+#remote func ghost_add_f(pos, rot, frame):
+#	if (get_tree().is_network_server()):
+#		for id in network.players:
+#			if id != 1:
+#				rpc_id(id, "_on_ghost_add", pos, rot, frame)
+#
+#	var this_ghost = preload("res://ghost.tscn").instance()
+#	add_child(this_ghost)
+#	this_ghost.position = pos
+#	this_ghost.texture = frame
+#	this_ghost.scale = $animation.scale
+#	this_ghost.rotation = rot

@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+func ghost_spawn(pos, rot, frame, scale):
+	var this_ghost = preload(\"res://ghost.tscn\").instance()
+	get_parent().add_child(this_ghost)
+	this_ghost.position = pos
+	this_ghost.texture = frame
+	this_ghost.scale = scale
+	this_ghost.rotation = rot
+"
+
+[node name="ghost_spawner" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
