@@ -1,9 +1,11 @@
 extends Node2D
 
-var done = true
+
+var game_in_progress = false
+
+var win_x = 0
+
 func _ready():
-
-
 	# Connect event handler to the player_list_changed signal
 	network.connect("player_list_changed", self, "_on_player_list_changed")
 	# If we are in the server, connect to the event that will deal with player despawning
@@ -16,14 +18,15 @@ func _ready():
 	
 	# Spawn the players
 	if (get_tree().is_network_server()):
-		spawn_players(gamestate.player_info, 1)
 		read_map()
+		spawn_players(gamestate.player_info, 1)
+
 		#sync_bots(-1)    # The amount doesn't matter because it will be calculated in the function body
 	else:
 		rpc_id(1, "spawn_players", gamestate.player_info, -1)
 		rpc_id(1, "read_map")
 
-
+	$HUD/start.visible = get_tree().is_network_server()
 		#HUDrpc_id(1, "sync_bots", -1)
 	
 
@@ -83,6 +86,9 @@ remote func spawn_players(pinfo, spawn_index):
 	nactor.set_dominant_color(pinfo.char_color)
 	# And the actor position
 	nactor.position = $SpawnPoints.get_node(str(spawn_index)).position
+	
+	nactor.win_x = win_x
+	
 	# If this actor does not belong to the server, change the node name and network master accordingly
 	if (pinfo.net_id != 1):
 		nactor.set_network_master(pinfo.net_id)
@@ -119,7 +125,11 @@ remotesync func read_map(old_content = "", map = "level1.txt"):
 		var pos = Vector2(int(i.substr(1,comma)), int(i.substr(comma+2,len(i)-1)))
 		$TileMap.set_cellv(pos, 1)
 		$TileMap.update_bitmask_area(pos)
-
+	
+	#WILL BE CONTAINED IN FILE - CHANGE FILE PARSING LATER
+	win_x = 800
+	
+	
 	
 remote func despawn_player(pinfo):
 	if (get_tree().is_network_server()):
@@ -140,20 +150,14 @@ remote func despawn_player(pinfo):
 	# Mark the node for deletion
 	player_node.queue_free()
 
-#func ghost_action(pos, rot, frame, scale):
-#	rpc("ghost_spawn", pos, rot, frame, scale)
+
+
+func _on_start_pressed():
+	$HUD/start.visible = false
+	rpc("reset_pos")
 	
-
-
-#remote func ghost_add_f(pos, rot, frame):
-#	if (get_tree().is_network_server()):
-#		for id in network.players:
-#			if id != 1:
-#				rpc_id(id, "_on_ghost_add", pos, rot, frame)
-#
-#	var this_ghost = preload("res://ghost.tscn").instance()
-#	add_child(this_ghost)
-#	this_ghost.position = pos
-#	this_ghost.texture = frame
-#	this_ghost.scale = $animation.scale
-#	this_ghost.rotation = rot
+remotesync func reset_pos():
+	for i in get_children():
+		if i is KinematicBody2D:
+			i.reset_position()
+	

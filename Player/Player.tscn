@@ -39,10 +39,10 @@ extents = Vector2( 6, 24 )
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 4, 14 )
 
-[sub_resource type="RectangleShape2D" id=10]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 2, 6 )
 
-[sub_resource type="RectangleShape2D" id=11]
+[sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 6, 2 )
 
 [node name="Player" type="KinematicBody2D"]
@@ -63,19 +63,18 @@ shape = SubResource( 7 )
 
 [node name="body5" type="CollisionShape2D" parent="."]
 position = Vector2( 2, 38 )
-shape = SubResource( 10 )
+shape = SubResource( 8 )
 
 [node name="body7" type="CollisionShape2D" parent="."]
 position = Vector2( 2, 10 )
-shape = SubResource( 10 )
+shape = SubResource( 8 )
 
 [node name="tipCollision2" type="CollisionShape2D" parent="."]
 position = Vector2( -2, 62 )
-shape = SubResource( 11 )
+shape = SubResource( 9 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-smoothing_enabled = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_ignore_camera_zoom = true

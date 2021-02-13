@@ -34,6 +34,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="start" type="Button" parent="HUD"]
+margin_left = 888.0
+margin_top = 160.0
+margin_right = 933.0
+margin_bottom = 180.0
+rect_scale = Vector2( 2, 2 )
+text = "Start!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 32, 32 )
@@ -60,3 +71,4 @@ position = Vector2( 89, 83 )
 
 [node name="6" type="Position2D" parent="SpawnPoints"]
 position = Vector2( 761, -76 )
+[connection signal="pressed" from="HUD/start" to="." method="_on_start_pressed"]

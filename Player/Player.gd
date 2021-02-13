@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const GRAVITY = 40
+const GRAVITY = 3000
 const ROTATION_SPEED = 7
 const JUMP_HEIGHT = -550
 
@@ -13,6 +13,10 @@ var friction = false
 
 var multiplier = .8
 
+var original_position = Vector2(-1023, -1023)
+
+var win_x = 0
+
 slave var slave_multiplier = .8
 
 slave var slave_position = Vector2()
@@ -23,9 +27,13 @@ func _ready():
 
 func _physics_process(delta):
 	
-
+	if original_position == Vector2(-1023, -1023):
+		original_position = position
 	
-	motion.y += GRAVITY + fastfall
+	if position.x > win_x:
+		print(position.x)
+	
+	motion.y += (GRAVITY + fastfall) * delta
 
 	if friction:
 		if rotation < -PI/1.97:
@@ -33,6 +41,7 @@ func _physics_process(delta):
 		elif rotation > PI/1.97:
 			rotation -= 10 * delta
 		motion.x += sign(motion.x) * -200 * delta
+		
 	if jump < 0:
 		jump -= delta
 		$animation.play("air")
@@ -45,7 +54,7 @@ func _physics_process(delta):
 				elif Input.is_action_pressed("ui_left"):
 					rotation -= ROTATION_SPEED * delta
 				elif Input.is_action_pressed("ui_down"):
-					fastfall = 45
+					fastfall = 2000
 			
 			last_speed = sqrt(motion.x*motion.x + motion.y*motion.y)
 			motion = move_and_slide(motion)
@@ -90,6 +99,8 @@ func _physics_process(delta):
 		
 		if jump <= 0:
 			motion = Vector2(0, -600 - last_speed * slave_multiplier).rotated(rotation)
+			#if slave_multiplier == .8:
+				#rpc("cloud_anim", $cloud_spawn.global_position, rotation)
 
 		
 func init(nickname, start_position, is_slave):
@@ -98,30 +109,15 @@ func init(nickname, start_position, is_slave):
 func set_dominant_color(color):
 	$animation.modulate = color
 
-
-#func _on_ghost_timer_timeout():
-#	if jump < 0 and jump > -.5 and multiplier == .8:
-		#if(get_tree().is_network_server()):
-		#	var this_ghost = preload("res://ghost.tscn").instance()
-		#	get_parent().add_child(this_ghost)
-		#	this_ghost.position = position
-		#	this_ghost.texture = $animation.frames.get_frame($animation.animation, $animation.frame)
-		#	this_ghost.scale = $animation.scale
-		#	this_ghost.rotation = rotation
-		#else:
-		#	rpc("ghost_spawn", position, rotation, $animation.frames.get_frame($animation.animation, $animation.frame))
-#		rpc("ghost_spawn", position, rotation, $animation.frames.get_frame($animation.animation, $animation.frame))
-		#ghost_spawn(position, rotation,$animation.frames.get_frame($animation.animation, $animation.frame) )
-		#emit_signal("ghost_add", position, rotation, $animation.frames.get_frame($animation.animation, $animation.frame))
 			
 			
 func _on_ghost_timer_timeout():
 	#if jump < 0 and jump > -.5:
 		#print(slave_multiplier)
-	if jump < 0 and jump > -.5 and slave_multiplier == .8:
 		
+	if jump < 0 and jump > -.5 and slave_multiplier == .8:
 		rpc("ghost_spawn", position, rotation, $animation.frames.get_frame($animation.animation, $animation.frame))
-		#get_parent().ghost_action(position, rotation, $animation.frames.get_frame($animation.animation, $animation.frame), $animation.scale)
+
 		
 		
 remotesync func ghost_spawn(pos, rot, frame):
@@ -133,3 +129,7 @@ remotesync func ghost_spawn(pos, rot, frame):
 	this_ghost.scale = $animation.scale
 	this_ghost.rotation = rot
 
+func reset_position():
+	position = original_position
+	motion = Vector2(0,0)
+	rotation = 0
