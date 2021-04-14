@@ -6,7 +6,12 @@ var pressed
 var press
 var cameraTransform = Vector2.ZERO
 
+var zoom_dir = 0
+var frame_count = 0
+
 func _process(delta):
+	frame_count += 1
+	
 	var mouse_pos = get_viewport().get_mouse_position()
 	if mouse_pos.x < 50:
 		$Camera2D.position += Vector2(-cameraMoveSpeed, 0)
@@ -22,7 +27,13 @@ func _process(delta):
 		var pos = Vector2(round(mouse_pos.x/32), round(mouse_pos.y/32))
 		$TileMap.set_cellv(pos, press)
 		$TileMap.update_bitmask_area(pos)
-
+	
+	
+	$Camera2D.zoom += zoom_dir * Vector2(delta*5, delta*5)
+	
+	if(frame_count % 6 == 0):
+		zoom_dir = 0
+			
 
 
 func _input(event):
@@ -31,9 +42,17 @@ func _input(event):
 		#determines if should add or delete tile - left click should be 0 (add tile), right click -1
 		if event.button_index == BUTTON_LEFT:
 			press = 1
-		else:
+		elif event.button_index == BUTTON_RIGHT:
 			press = -1
-		#press = int(event.button_index == BUTTON_LEFT) - 1
+			
+		elif event.button_index == BUTTON_WHEEL_UP:
+			zoom_dir = -1
+			# zoom out
+		elif event.button_index == BUTTON_WHEEL_DOWN:
+			zoom_dir = 1
+		else:
+			zoom_dir = 0
+
 
 
 func _on_save_pressed():

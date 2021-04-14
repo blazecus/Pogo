@@ -1,36 +1,37 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Player/pogo.png" type="Texture" id=2]
 [ext_resource path="res://background.png" type="Texture" id=3]
+[ext_resource path="res://grappling_hook.tscn" type="PackedScene" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
-region = Rect2( 32, 0, 32, 32 )
+region = Rect2( 0, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 2 )
-region = Rect2( 0, 32, 32, 32 )
+region = Rect2( 32, 0, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 2 )
-region = Rect2( 32, 32, 32, 32 )
+region = Rect2( 0, 32, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 32, 32 )
+region = Rect2( 32, 32, 32, 32 )
 
 [sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ), SubResource( 3 ) ],
-"loop": true,
-"name": "jump",
-"speed": 12.0
-}, {
-"frames": [ SubResource( 4 ) ],
+"frames": [ SubResource( 1 ) ],
 "loop": true,
 "name": "air",
 "speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ) ],
+"loop": true,
+"name": "jump",
+"speed": 12.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=6]
@@ -46,12 +47,29 @@ extents = Vector2( 2, 6 )
 extents = Vector2( 6, 2 )
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource( 1 )
 
 [node name="animation" type="AnimatedSprite" parent="."]
 scale = Vector2( 4, 4 )
 frames = SubResource( 5 )
 animation = "air"
+
+[node name="body_copy" type="Position2D" parent="animation"]
+position = Vector2( -1.5, -2 )
+
+[node name="body2_copy" type="Position2D" parent="animation"]
+position = Vector2( -1, 7.5 )
+
+[node name="body5_copy" type="Position2D" parent="animation"]
+position = Vector2( 0.5, 9.5 )
+
+[node name="body7_copy" type="Position2D" parent="animation"]
+position = Vector2( 0.5, 2.5 )
+
+[node name="tip_collision_copy" type="Position2D" parent="animation"]
+position = Vector2( -0.5, 15.5 )
 
 [node name="body" type="CollisionShape2D" parent="."]
 position = Vector2( -6, -8 )
@@ -69,7 +87,7 @@ shape = SubResource( 8 )
 position = Vector2( 2, 10 )
 shape = SubResource( 8 )
 
-[node name="tipCollision2" type="CollisionShape2D" parent="."]
+[node name="tip_collision" type="CollisionShape2D" parent="."]
 position = Vector2( -2, 62 )
 shape = SubResource( 9 )
 
@@ -90,4 +108,7 @@ texture = ExtResource( 3 )
 [node name="ghost_timer" type="Timer" parent="."]
 wait_time = 0.05
 autostart = true
+
+[node name="Chain" parent="." instance=ExtResource( 4 )]
+visible = false
 [connection signal="timeout" from="ghost_timer" to="." method="_on_ghost_timer_timeout"]
